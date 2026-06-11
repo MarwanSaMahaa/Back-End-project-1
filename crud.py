@@ -1,6 +1,6 @@
 import sqlite3
 
-conn = sqlite3.connect("products.db")
+conn = sqlite3.connect("products.db", check_same_thread=False)
 cursor = conn.cursor()
 
 cursor.execute("CREATE TABLE IF NOT EXISTS products (name TEXT, price INTEGER, quantity INTEGER)")
@@ -14,7 +14,7 @@ def create(name, price, quantity):
     )
     conn.commit()
 
-def getAll():
+def get_all():
     cursor.execute("SELECT * FROM products")
     return cursor.fetchall()
 
@@ -25,10 +25,10 @@ def get(name):
     )
     return cursor.fetchall()
 
-def update(name, price, quantity):
+def update(old_name, new_name, price, quantity):
     cursor.execute(
-        "UPDATE products SET price = ?, quantity = ? WHERE name = ?",
-        (price, quantity, name)
+        "UPDATE products SET name = ?, price = ?, quantity = ? WHERE name = ?",
+        (new_name, price, quantity, old_name)
     )
     conn.commit()
 
