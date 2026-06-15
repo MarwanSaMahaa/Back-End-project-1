@@ -15,8 +15,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app = FastAPI()
-
 @app.post("/product")
 def create_product(name: str, price: int, quantity: int):
     crud.create(name, price, quantity)
@@ -25,7 +23,7 @@ def create_product(name: str, price: int, quantity: int):
 @app.get("/products")
 def read_all_products():
     return crud.get_all()
-    
+
 @app.get("/product")
 def read_one_product(name: str):
     return crud.get(name)
