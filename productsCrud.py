@@ -1,6 +1,6 @@
 import sqlite3
 
-conn = sqlite3.connect("products.db", check_same_thread=False)
+conn = sqlite3.connect("main.db", check_same_thread=False)
 cursor = conn.cursor()
 
 cursor.execute("CREATE TABLE IF NOT EXISTS products (name TEXT, price INTEGER, quantity INTEGER)")
