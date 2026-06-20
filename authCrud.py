@@ -37,3 +37,10 @@ def delete_user(user_id):
         (user_id,)
     )
     conn.commit()
+
+def login_user(username, password):
+    cursor.execute(
+        "SELECT * FROM users WHERE username = ? AND password = ?",
+        (username, password)
+    )
+    return cursor.fetchone()

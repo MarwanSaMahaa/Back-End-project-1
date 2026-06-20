@@ -12,10 +12,28 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.post("/user")
-def create_user(username: str, email: str, password: str, role: int = 0):
+@app.post("/signup")
+def signup(username: str, email: str, password: str, role: int = 0):
     authCrud.create_user(username, email, password, role)
     return {"message": "User created successfully"}
+
+@app.post("/login")
+def login(username: str, password: str):
+    user = authCrud.login_user(username, password)
+
+    if user:
+        return {
+            "success": True,
+            "id": user[0],
+            "username": user[1],
+            "email": user[2],
+            "role": user[4]
+        }
+
+    return {
+        "success": False,
+        "message": "Invalid username or password"
+    }
 
 @app.get("/users")
 def read_all_users():
