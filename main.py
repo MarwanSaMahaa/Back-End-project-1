@@ -1,7 +1,16 @@
 import crud
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.post("/product")
 def create_product(name: str, price: int, quantity: int):
@@ -11,7 +20,7 @@ def create_product(name: str, price: int, quantity: int):
 @app.get("/products")
 def read_all_products():
     return crud.get_all()
-    
+
 @app.get("/product")
 def read_one_product(name: str):
     return crud.get(name)
