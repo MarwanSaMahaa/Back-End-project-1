@@ -14,7 +14,7 @@ def create_user(username, email, password, role=0):
     conn.commit()
 
 def get_all_users():
-    cursor.execute("SELECT id, username, email, role FROM users")
+    cursor.execute("SELECT * FROM users")
     return cursor.fetchall()
 
 def get_user(user_id):
@@ -42,5 +42,12 @@ def login_user(username, password):
     cursor.execute(
         "SELECT * FROM users WHERE username = ? AND password = ?",
         (username, password)
+    )
+    return cursor.fetchone()
+
+def get_user_by_username(username):
+    cursor.execute(
+        "SELECT * FROM users WHERE username = ?",
+        (username,)
     )
     return cursor.fetchone()

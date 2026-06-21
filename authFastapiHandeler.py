@@ -1,6 +1,7 @@
 import authCrud
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import bcrypt
 
 app = FastAPI()
 
@@ -14,14 +15,33 @@ app.add_middleware(
 
 @app.post("/signup")
 def signup(username: str, email: str, password: str, role: int = 0):
-    authCrud.create_user(username, email, password, role)
+
+    hashed_password = bcrypt.hashpw(
+        password.encode("utf-8"),
+        bcrypt.gensalt()
+    ).decode("utf-8")
+
+    authCrud.create_user(
+        username,
+        email,
+        hashed_password,
+        role
+    )
+
     return {"message": "User created successfully"}
 
 @app.post("/login")
 def login(username: str, password: str):
-    user = authCrud.login_user(username, password)
 
-    if user:
+    user = authCrud.get_user_by_username(username)
+
+    if not user:
+        return {"success": False}
+
+    if bcrypt.checkpw(
+        password.encode("utf-8"),
+        user[3].encode("utf-8")
+    ):
         return {
             "success": True,
             "id": user[0],
@@ -30,10 +50,7 @@ def login(username: str, password: str):
             "role": user[4]
         }
 
-    return {
-        "success": False,
-        "message": "Invalid username or password"
-    }
+    return {"success": False}
 
 @app.get("/users")
 def read_all_users():
